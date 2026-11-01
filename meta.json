@@ -1,0 +1,11 @@
+{
+  "name": "Splunk HEC build event",
+  "summary": "Posts the plugin's job_event / build_report JSON to Splunk's HTTP Event Collector with the HEC envelope, metadata and Splunk token header.",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": [
+    "official-port",
+    "splunk",
+    "logging"
+  ]
+}

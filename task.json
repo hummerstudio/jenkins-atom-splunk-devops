@@ -1,0 +1,224 @@
+{
+  "atomCode": "splunk-devops",
+  "name": "Splunk HEC build event",
+  "version": "1.0.0",
+  "description": "Sends a Jenkins job_event or build_report to Splunk's HTTP Event Collector as JSON, with the plugin's envelope, metadata and authentication.",
+  "execution": {
+    "packagePath": "splunk-devops.jar",
+    "language": "java",
+    "target": "$atom_java_path -cp splunk-devops.jar com.jenkinschina.atom.sdk.AtomRunner"
+  },
+  "input": {
+    "url": {
+      "label": "Splunk HEC 地址（如 https://splunk.example.com:8088，自动补 /services/collector/event）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "token": {
+      "label": "HEC Token（Authorization: Splunk <token>）",
+      "type": "password",
+      "default": ""
+    },
+    "eventKind": {
+      "label": "事件类型：job_event（构建事件）/ build_report（构建报告）/ custom（自定义 JSON）",
+      "type": "vuex-input",
+      "default": "job_event"
+    },
+    "jobEventType": {
+      "label": "job_event 阶段：completed / started",
+      "type": "vuex-input",
+      "default": "completed"
+    },
+    "jobName": {
+      "label": "job_name（默认 ${JOB_NAME}）",
+      "type": "vuex-input",
+      "default": "${JOB_NAME}"
+    },
+    "buildNumber": {
+      "label": "build_number（默认 ${BUILD_NUMBER}）",
+      "type": "vuex-input",
+      "default": "${BUILD_NUMBER}"
+    },
+    "buildUrl": {
+      "label": "build_url（插件写的是 run.getUrl() 的相对路径）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "jobResult": {
+      "label": "job_result SUCCESS/UNSTABLE/FAILURE/NOT_BUILT/ABORTED（默认 ${BUILD_STATUS}）",
+      "type": "vuex-input",
+      "default": "${BUILD_STATUS}"
+    },
+    "jobDurationMs": {
+      "label": "构建耗时毫秒（job_duration = 毫秒/1000，小于 10 时用 now - 开始时间）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "jobStartedTimeMs": {
+      "label": "开始时间（epoch 毫秒，用于 job_started_at 与 job_duration 兜底）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "jobStartedAt": {
+      "label": "job_started_at（留空则用开始时间格式化，yyyy-MM-dd'T'HH:mm:ss.SSSZ）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "queueId": {
+      "label": "queue_id（默认 0）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "queueTimeSeconds": {
+      "label": "queue_time 秒（默认 0）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "user": {
+      "label": "触发用户（留空记 anonymous，与插件 getTriggerUserName 一致）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "triggerBy": {
+      "label": "trigger_by（构建原因短描述，逗号分隔）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "upstream": {
+      "label": "upstream（上游构建 URL，可空）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "node": {
+      "label": "node（默认 ${NODE_NAME}）",
+      "type": "vuex-input",
+      "default": "${NODE_NAME}"
+    },
+    "label": {
+      "label": "节点标签（可空）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "jobType": {
+      "label": "job_type（如 Freestyle project，可空）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "parameters": {
+      "label": "构建参数（每行 key=value，写进 metadata）",
+      "type": "textarea",
+      "default": ""
+    },
+    "maskedParameters": {
+      "label": "需要打码的参数名（逗号分隔，值写成 ***）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "testsTotal": {
+      "label": "测试总数（留空则不写 test_summary）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "testsFailed": {
+      "label": "失败数",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "testsSkipped": {
+      "label": "跳过数",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "testsDurationSeconds": {
+      "label": "测试耗时秒",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "customEvent": {
+      "label": "eventKind=custom 时的 JSON 对象（即 event 字段）",
+      "type": "textarea",
+      "default": ""
+    },
+    "index": {
+      "label": "index（留空按类型：job_event=jenkins_statistics，build_report=jenkins）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "source": {
+      "label": "source（留空为 jenkins/<类型>）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "sourcetype": {
+      "label": "sourcetype（默认 json:jenkins）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "host": {
+      "label": "host（留空则不写该字段）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "timestampMs": {
+      "label": "事件时间（epoch 毫秒，留空用当前时间；报文里是秒 + 三位小数）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "compress": {
+      "label": "超过 1KiB 时 gzip（true/false，插件默认压缩）",
+      "type": "vuex-input",
+      "default": "true"
+    },
+    "dryRun": {
+      "label": "只组报文不发请求（true/false）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "failOnError": {
+      "label": "被拒/连不上是否让构建失败（默认 true；插件只记日志）",
+      "type": "vuex-input",
+      "default": "true"
+    },
+    "timeoutSeconds": {
+      "label": "超时秒数",
+      "type": "vuex-input",
+      "default": "30"
+    }
+  },
+  "output": {
+    "eventKind": {
+      "type": "string",
+      "description": "发送的事件类型"
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "请求路径"
+    },
+    "httpStatus": {
+      "type": "string",
+      "description": "HTTP 状态（连不上为空）"
+    },
+    "channel": {
+      "type": "string",
+      "description": "x-splunk-request-channel 的值"
+    },
+    "bytes": {
+      "type": "string",
+      "description": "实际发出的字节数（压缩后）"
+    },
+    "gzipped": {
+      "type": "string",
+      "description": "是否 gzip"
+    },
+    "body": {
+      "type": "string",
+      "description": "实际发出的 JSON（也是 dry run 的唯一产物）"
+    }
+  },
+  "x-jenkins": {
+    "protocol": "jenkins-1",
+    "requires": {
+      "runner": ">=0.4.0"
+    }
+  }
+}
