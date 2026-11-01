@@ -79,10 +79,12 @@ def sdk_jar():
     env = os.environ.get("SDK_JAR")
     if env:
         return env
-    candidates = sorted((HERE.parent / "jenkins-atom-sdk" / "target").glob("jenkins-atom-sdk-*.jar"))
-    if not candidates:
-        raise SystemExit("build the SDK first: cd ../jenkins-atom-sdk && ./build.sh")
-    return str(candidates[-1])
+    # CI checks the SDK out inside the workspace (jenkins-atom-sdk/), a local tree has it next door
+    for root in (HERE.parent / "jenkins-atom-sdk", HERE / "jenkins-atom-sdk"):
+        candidates = sorted((root / "target").glob("jenkins-atom-sdk-*.jar"))
+        if candidates:
+            return str(candidates[-1])
+    raise SystemExit("build the SDK first: cd ../jenkins-atom-sdk && ./build.sh")
 
 
 def build(tree):
